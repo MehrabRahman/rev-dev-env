@@ -9,11 +9,13 @@ Be sure to [enable file extensions](https://www.thewindowsclub.com/show-file-ext
 ## Week 1: Java
 For the first week, we will need the following tools installed:
 * [Git for Windows](https://git-scm.com)
-* [Oracle JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Oracle JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) (Alternative: [OpenJDK](https://adoptopenjdk.net/))
 * [Apache Maven](https://maven.apache.org/)
 * [Spring Tool Suite](https://spring.io/tools3/sts/all) 
 
 Either manually download and install each tool, or follow the instructions below using the Chocolatey package manager for Windows. 
+
+### Installing Java, Maven, and STS with Chocolatey
 1) Install [Chocolatey](https://chocolatey.org)
      1) Open `Powershell` as an administrator.
      2) Run:
@@ -26,8 +28,18 @@ Either manually download and install each tool, or follow the instructions below
     >choco install git
 4) To install [Oracle JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html):
     >choco install jdk8
+    
+    4a) Alternatively, use `choco install` and an OpenJDK distribution of your choosing:
+    ```bash
+    choco install adoptopenjdk8
+    choco install zulu8
+    choco install corretto8jdk
+    ```
 5) To install [Apache Maven](https://maven.apache.org/):
     >choco install maven
+
+    5a) If using an OpenJDK distribution of Java, you should install Maven with the following command to avoid accidentally installing OracleJDK:
+    >choco install maven --ignore-dependencies
 6) To install [Spring Tool Suite](https://spring.io/tools3/sts/all):
     >choco install springtoolsuite
 
@@ -43,4 +55,18 @@ You should pin the shortcut to STS. All above tools can be installed at once for
 >choco install -y git jdk8 maven springtoolsuite
 
 ## Week 2: SQL
+To use [PostgreSQL](https://www.postgresql.org/download/) database, either install them locally or create a RDS instance on [AWS](https://aws.amazon.com/).
 
+### Installing PostgreSQL with Chocolatey
+1) Install the database:
+    >choco install postgresql
+2) Install a client tool to manage the database:
+    
+    2a) To use pgAdmin3
+    >choco install pgadmin3
+    
+    2b) To use pgAdmin4
+    >choco install pgadmin4
+
+    2c) To use DBeaver 
+    >choco install dbeaver
