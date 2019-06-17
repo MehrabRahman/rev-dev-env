@@ -45,11 +45,14 @@ Either manually download and install each tool, or follow the instructions below
 
 ### Summary
 To confirm all tools are properly installed and configured, be sure the following commands return no errors:
->git -v
+```bash
+git -v
+java -version
+javac -version
+mvn -v
+```
 
->javac -version
-
->mvn -v
+`java` and `javac` should only reference Java 8.
 
 You should pin the shortcut to STS. All above tools can be installed at once for convenience using the following command:
 >choco install -y git jdk8 maven springtoolsuite
