@@ -45,3 +45,9 @@ User and workspace settings can be changed either through File -> Preferences ->
 - `terminal.explorerKind`: Sets the preferred default shell when debugging. Set to "external" or "integrated" as the default "internal" shell does not work with stdin/stdout commands for Java command line programs.
 - `docker.host`: Use with Docker extension to manually set the DOCKER_HOST environment variable, if the extension is unable to detect an existing docker machine locally or if an external docker server is needed.
 - `java.format.onType.enabled`: Use with the Java extension pack to automatically format a Java file after every enter, semicolon, or closing brace.
+
+## VSCode as default git commit editor
+In a terminal, run:
+>git config --global core.editor "code --wait"
+
+This will open a text file in VSCode for commit messages.

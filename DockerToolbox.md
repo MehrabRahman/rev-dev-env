@@ -1,5 +1,7 @@
 # Docker Toolbox for Windows
-For Windows users not using Windows 10 Enterprise, Docker Toolbox is required for using Docker locally. There are several ways into install the tool and its dependencies: the binary installer, Chocolatey, or installing the individual tools with Chocolatey
+For Windows users not using Windows 10 Enterprise, Docker Toolbox is required for using Docker locally. There are several ways into install the tool and its dependencies: the binary installer, Chocolatey, or installing the individual tools with Chocolatey.
+
+[Official Install Guide](https://docs.docker.com/toolbox/toolbox_install_windows/)
 
 ## Installing Docker
 ### Docker Toolbox Installer
@@ -25,7 +27,21 @@ Docker Toolbox bundles several tools as one, and it is possible to install each 
     >choco install docker-compose
 
 ## Starting Docker
-With Docker Toolbox, the Docker Quickstart Terminal (or Kitematic) can start the Docker machine. This will boot up the virtual machine on VirtualBox and set environment variables for that terminal session. If using Docker Machine without the Toolbox installer, the machine and its environment variables must be started and set manually:
+With Docker Toolbox, the Docker Quickstart Terminal (or Kitematic) can start the Docker machine. This will boot up the virtual machine on VirtualBox and set environment variables for that terminal session. Confirm Docker is working with the following commands:
+
+```bash
+# Should display docker cli version
+docker -v
+
+# At least one active machine should be RUNNING. Use `docker-machine start` if not.
+docker-machine ls
+
+# Run hello-world
+docker run hello-world
+```
+
+### Docker CLI only
+If using Docker Machine without the Toolbox installer, the machine and its environment variables must be started and set manually:
 1) If using Docker the first time:
     >docker-machine create default
 2) If the machine is successfully created already:
@@ -34,7 +50,15 @@ With Docker Toolbox, the Docker Quickstart Terminal (or Kitematic) can start the
     >docker-machine env
 4) Copy and run the output.
 
-To avoid repeating the environment variable set-up each time, the variables can be set as permanent System Environment Variables.
+To avoid repeating the environment variable set-up each time, the variables can be set as permanent System Environment Variables:
+```powershell
+[System.Environment]::SetEnvironmentVariable("DOCKER_TLS_VERIFY", "1", "Machine");
+[System.Environment]::SetEnvironmentVariable("DOCKER_HOST", "tcp://192.168.99.100:2376", "Machine");
+[System.Environment]::SetEnvironmentVariable("DOCKER_CERT_PATH", "C:\Users\[YourUserName]\.docker\machine\machines\default", "Machine");
+[System.Environment]::SetEnvironmentVariable("DOCKER_MACHINE_NAME", "default", "Machine");
+[System.Environment]::SetEnvironmentVariable("COMPOSE_CONVERT_WINDOWS_PATHS", "true", "Machine");
+```
+Be sure to use your user name for DOCKER_CERT_PATH, or copy the proper path from the `docker-machine env` output.
 
 ## Docker Machine IP & Forwarding
 When Docker runs natively, its server IP is localhost (127.0.0.1), but for Windows users with Docker Toolbox/Machine we must use the IP of the virtual machine. The `docker-machine env` command will show the current IP of the machine, but normally it will default to `192.168.99.100`. This means wherever `localhost` is used, a server running on a Docker container will be found on `192.168.99.100`.
@@ -48,3 +72,45 @@ Open your Docker machine's Settings in Virtual Box and select Shared Folders. Th
 
 For example, with the Folder Path `C:\Users\Revature\postgres` named `postgres`, run a Docker container with a volumes flag as:
 >docker run -p 5432:5432 -v //postgres:/var/lib/postgresql/data postgres
+
+## Example - Postgres
+### Docker Run
+```bash
+# Running basic database
+docker run -d -p 5432:5432 postgres
+
+# Running and naming database container
+docker run --name chinook -d -p 5432:5432 postgres
+
+# Running database with custom username/password
+docker run -e POSTGRES_USER=chinook -e POSTGRES_PASSWORD=p4ssw0rd -d -p 5432:5432 postgres
+
+# Attaching docker volume
+docker run -d -p 5432:5432 -v //postgres:/var/lib/postgresql/data postgres
+```
+
+### Building Dockerfile
+To create a custom postgres database, create a file named `Dockerfile`:
+```Dockerfile
+FROM postgres:10
+ENV POSTGRES_USER hello-postgres
+ENV POSTGRES_PASSWORD hello-postgres
+ADD schema.sql /docker-entrypoint-initdb.d
+EXPOSE 5432
+```
+
+Set the username and password as needed, and include a `.sql` file in the same directory.
+
+```bash
+# To build:
+docker build -t [custom-name] .
+
+# To run:
+docker run -p 5432:5432 -d [custom-name]
+```
+
+### Connecting with psql
+After running a postgres container, run the following:
+>docker exec -it [container-name] psql -U [postgres_user]
+
+This will run the psql cli tool from within the postgres container and attach your shell to the running container.
