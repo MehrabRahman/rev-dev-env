@@ -38,3 +38,10 @@ Visual Studio Code is freely available for download on Windows, MacOS, and Linux
 
 - [Quicktype](https://marketplace.visualstudio.com/items?itemName=quicktype.quicktype) generates classes from a JSON source for a variety of languages, including Java and TypeScript.
 
+## Recommended Settings
+User and workspace settings can be changed either through File -> Preferences -> Settings (Ctrl + ,) or in `settings.json`. Some particular options of note:
+- `terminal.integrated.shell.windows`: changes the default integrated terminal. Can be set to Git Bash on Windows shell.
+- `java.home`: While normally detected on system environment variables, a preferred JDK installation can be manually set here.
+- `terminal.explorerKind`: Sets the preferred default shell when debugging. Set to "external" or "integrated" as the default "internal" shell does not work with stdin/stdout commands for Java command line programs.
+- `docker.host`: Use with Docker extension to manually set the DOCKER_HOST environment variable, if the extension is unable to detect an existing docker machine locally or if an external docker server is needed.
+- `java.format.onType.enabled`: Use with the Java extension pack to automatically format a Java file after every enter, semicolon, or closing brace.
